@@ -1,4 +1,4 @@
-package struct;
+package api;
 
 import graphics.MainWindow;
 

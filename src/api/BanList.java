@@ -1,4 +1,4 @@
-package struct;
+package api;
 
 import java.io.Serializable;
 import java.util.HashSet;

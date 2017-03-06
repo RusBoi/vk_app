@@ -2,8 +2,8 @@ package graphics;
 
 import objects.Comment;
 import objects.Group;
-import struct.APIRequests;
-import struct.Program;
+import api.APIRequests;
+import api.Program;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
