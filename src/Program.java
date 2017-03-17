@@ -1,6 +1,6 @@
-package api;
-
 import graphics.MainWindow;
+import struct.BanList;
+import struct.ProgramState;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,14 +10,14 @@ import java.io.*;
 import java.util.Properties;
 
 public class Program {
-    public static int APP_ID;
-    public static String CLIENT_SECRET;
-    public static String ACCESS_TOKEN;
-    private final static int groupID = 97229237;
-    public static BanList banList = loadBanList();
+    public static void main(String[] args) {
+        // Устанавливаем Look and Feel
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 
-    public static void main(String[] args) throws WrongResponse {
-        
+        } catch (Exception ex) {}
+
+
         Properties prop = new Properties();
         try {
             prop.load(new FileInputStream("resources/config.properties"));
@@ -25,55 +25,53 @@ public class Program {
             e.printStackTrace();
         }
 
-        APP_ID = Integer.valueOf(prop.getProperty("APP_ID"));
-        CLIENT_SECRET = prop.getProperty("CLIENT_SECRET");
-        ACCESS_TOKEN = prop.getProperty("ACCESS_TOKEN");
-
-        // load banlist
+        int APP_ID = Integer.valueOf(prop.getProperty("APP_ID"));
+        String CLIENT_SECRET = prop.getProperty("CLIENT_SECRET");
+        String ACCESS_TOKEN = prop.getProperty("ACCESS_TOKEN");
 
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame f = null;
+                BanList banList = null;
                 try {
-                    f = new MainWindow(APIRequests.getMyGroups());
-                } catch (WrongResponse wrongResponse) {
-                    wrongResponse.printStackTrace();
+                    banList = loadBanList();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    banList = new BanList();
                 }
+                JFrame f = new MainWindow(new ProgramState(APP_ID, CLIENT_SECRET, ACCESS_TOKEN, banList));
                 f.setName("Whores On VK");
-//                f.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//                f.setUndecorated(true);
+                f.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 f.setSize(new Dimension(1500, 720));
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 f.setVisible(true);
                 f.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
-                        serializeBanList();
+                        BanList bs = ((MainWindow) e.getSource()).getProgramState().banList;
+                        // serializeBanList(bs);
                     }
                 });
             }
         });
     }
 
-    private static BanList loadBanList() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("resources/banlist"))) {
+    private static BanList loadBanList() throws IOException {
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream("resources/banlist"));
+        try {
             return (BanList) ois.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private static void serializeBanList() {
+    private static void serializeBanList(BanList banList) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("resources/banlist"))) {
             oos.writeObject(banList);
             oos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }

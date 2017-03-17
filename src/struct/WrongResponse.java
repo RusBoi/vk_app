@@ -1,4 +1,4 @@
-package api;
+package struct;
 
 public class WrongResponse extends Exception {
     private String error_code;

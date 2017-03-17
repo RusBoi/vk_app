@@ -1,4 +1,4 @@
-package api;
+package struct;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -13,6 +13,10 @@ public class BanList implements Serializable {
 
     public void addID(int id) {
         banList.add(id);
+    }
+
+    public void removeID(int id) {
+        banList.remove(id);
     }
 
     public boolean contains(int id) {
