@@ -49,7 +49,7 @@ public class Program {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         BanList bs = ((MainWindow) e.getSource()).getProgramState().banList;
-                        // serializeBanList(bs);
+                        serializeBanList(bs);
                     }
                 });
             }

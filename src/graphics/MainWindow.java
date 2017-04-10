@@ -24,7 +24,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MainWindow extends JFrame {
-    public final static int POST_COUNT = 20;
+    public final static int POST_COUNT = 300;
     private final static int COMMENT_LENGTH = 60;
     public static final int UNIT_INCREMENT = 16;
 
